@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- IK Test Node -->
+    <node name="ik_test_node" pkg="obserbot_move_pkg" type="ik_test_node.py" output="screen">
+        <param name="rate" value="10"/>
+    </node>
+
+    <!-- Obserbot Move Node -->
+    <node name="obserbot_move_node" pkg="obserbot_move_pkg" type="obserbot_move_node.py" output="screen">
+        <param name="rate" value="10"/>
+    </node>
+</launch> 
