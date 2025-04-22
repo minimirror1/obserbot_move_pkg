@@ -31,7 +31,17 @@ class IKTestNode:
         self.rl_z.grid(row=1, column=1, padx=5, pady=2)
         self.rl_z.insert(0, "0")
         
-        ttk.Button(rl_frame, text="Send", command=self.send_rl).grid(row=2, column=0, columnspan=2, pady=5)
+        ttk.Label(rl_frame, text="Th_x:").grid(row=2, column=0, padx=5, pady=2)
+        self.rl_th_x = ttk.Entry(rl_frame)
+        self.rl_th_x.grid(row=2, column=1, padx=5, pady=2)
+        self.rl_th_x.insert(0, "0")
+        
+        # Checkbox for using th_x_trg
+        self.use_rl_th_x = tk.BooleanVar()
+        self.use_rl_th_x.set(False)
+        ttk.Checkbutton(rl_frame, text="Use Th_x", variable=self.use_rl_th_x).grid(row=3, column=0, columnspan=2, pady=2)
+        
+        ttk.Button(rl_frame, text="Send", command=self.send_rl).grid(row=4, column=0, columnspan=2, pady=5)
         
         # LL 프레임
         ll_frame = ttk.LabelFrame(self.root, text="IK_LL", padding="5")
@@ -47,7 +57,17 @@ class IKTestNode:
         self.ll_z.grid(row=1, column=1, padx=5, pady=2)
         self.ll_z.insert(0, "0")
         
-        ttk.Button(ll_frame, text="Send", command=self.send_ll).grid(row=2, column=0, columnspan=2, pady=5)
+        ttk.Label(ll_frame, text="Th_x:").grid(row=2, column=0, padx=5, pady=2)
+        self.ll_th_x = ttk.Entry(ll_frame)
+        self.ll_th_x.grid(row=2, column=1, padx=5, pady=2)
+        self.ll_th_x.insert(0, "0")
+        
+        # Checkbox for using th_x_trg
+        self.use_ll_th_x = tk.BooleanVar()
+        self.use_ll_th_x.set(False)
+        ttk.Checkbutton(ll_frame, text="Use Th_x", variable=self.use_ll_th_x).grid(row=3, column=0, columnspan=2, pady=2)
+        
+        ttk.Button(ll_frame, text="Send", command=self.send_ll).grid(row=4, column=0, columnspan=2, pady=5)
         
         # 종료 버튼
         ttk.Button(self.root, text="Quit", command=self.quit_app).grid(row=2, column=0, pady=10)
@@ -59,9 +79,17 @@ class IKTestNode:
         try:
             x = float(self.rl_x.get())
             z = float(self.rl_z.get())
-            msg = Float32MultiArray(data=[x, z])
+            
+            # th_x_trg 사용 여부에 따라 데이터 구성
+            if self.use_rl_th_x.get():
+                th_x = float(self.rl_th_x.get())
+                msg = Float32MultiArray(data=[x, z, th_x])
+                rospy.loginfo(f"Sent RL target: x={x}, z={z}, th_x={th_x}")
+            else:
+                msg = Float32MultiArray(data=[x, z])
+                rospy.loginfo(f"Sent RL target: x={x}, z={z}")
+                
             self.ik_rl_pub.publish(msg)
-            rospy.loginfo(f"Sent RL target: x={x}, z={z}")
         except ValueError:
             rospy.logwarn("Invalid input values for RL")
             
@@ -69,9 +97,17 @@ class IKTestNode:
         try:
             x = float(self.ll_x.get())
             z = float(self.ll_z.get())
-            msg = Float32MultiArray(data=[x, z])
+            
+            # th_x_trg 사용 여부에 따라 데이터 구성
+            if self.use_ll_th_x.get():
+                th_x = float(self.ll_th_x.get())
+                msg = Float32MultiArray(data=[x, z, th_x])
+                rospy.loginfo(f"Sent LL target: x={x}, z={z}, th_x={th_x}")
+            else:
+                msg = Float32MultiArray(data=[x, z])
+                rospy.loginfo(f"Sent LL target: x={x}, z={z}")
+                
             self.ik_ll_pub.publish(msg)
-            rospy.loginfo(f"Sent LL target: x={x}, z={z}")
         except ValueError:
             rospy.logwarn("Invalid input values for LL")
             
