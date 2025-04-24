@@ -451,6 +451,90 @@ class ObserbotMoveNode:
             rospy.logerr(f"데이터 처리 중 오류 발생: {str(e)}")
 
 
+    def test_move_4(self):
+        """
+        데이터 파일에서 값을 읽어 순차적으로 송신하는 테스트 함수
+        set_sample_2.csv 파일의 좌표 값을 읽어서 5회 반복 전송
+        CSV 형식: x_R, z_R, th_R, x_L, z_L, th_L 순서
+        """
+        rospy.loginfo("테스트 시작: CSV 파일에서 다리 좌표 데이터 읽어오기 (5회 반복)")
+        
+        # CSV 파일 경로 설정
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        csv_path = os.path.join(script_dir, 'set_sample_4.csv')
+
+        # 테스트 함수 호출 : 초기 자세 (기본값 사용)
+        self.test_origen(-250,-360,-150,-360)        
+        
+        try:
+            # CSV 파일 읽기
+            with open(csv_path, 'r') as f:
+                data_points = f.readlines()
+            
+            # 데이터 포인트 파싱
+            coordinates = []
+            for line in data_points:
+                line = line.strip()
+                if line:  # 빈 줄 무시
+                    try:
+                        values = list(map(float, line.split(',')))
+                        # x_R, z_R, th_R, x_L, z_L, th_L 형식을 처리
+                        if len(values) >= 6:
+                            x_R, z_R, th_R, x_L, z_L, th_L = values[:6]
+                            coordinates.append((x_R, z_R, th_R, x_L, z_L, th_L))
+                        else:
+                            rospy.logwarn(f"데이터 형식 오류: {line} - 6개의 값이 필요합니다 (x_R, z_R, th_R, x_L, z_L, th_L)")
+                    except ValueError:
+                        rospy.logwarn(f"잘못된 데이터 형식 무시: {line}")
+            
+            rospy.loginfo(f"총 {len(coordinates)}개의 좌표점 로드 완료")
+            
+            # 데이터 포인트가 없으면 종료
+            if not coordinates:
+                rospy.logerr("유효한 좌표 데이터가 없습니다.")
+                return
+            
+            rate = rospy.Rate(100)  # 50Hz로 실행
+            total_repeats = 1  # 5회 반복
+            
+            # 5회 반복 전송
+            for repeat in range(1, total_repeats + 1):
+                rospy.loginfo(f"반복 {repeat}/{total_repeats} 시작")
+                
+                # 각 좌표점에 대해 메시지 발행
+                for i, (x_R, z_R, th_R, x_L, z_L, th_L) in enumerate(coordinates):
+                    if rospy.is_shutdown():
+                        return
+                    
+                    # RL 메시지 생성 및 발행
+                    rl_msg = Float32MultiArray()
+                    rl_msg.data = [x_R, z_R, th_R]
+                    
+                    # LL 메시지 생성 및 발행
+                    ll_msg = Float32MultiArray()
+                    ll_msg.data = [x_L, z_L, th_L]
+                    
+                    # 콜백 함수 호출
+                    self.rl_callback(rl_msg)
+                    self.ll_callback(ll_msg)
+                    
+                    # 현재 진행 상황 로깅 (10% 간격으로)
+                    if i % (len(coordinates) // 10) == 0 or i == len(coordinates) - 1:
+                        progress = (i / (len(coordinates) - 1)) * 100
+                        rospy.loginfo(f"반복 {repeat}/{total_repeats} - 진행률: {progress:.1f}% "
+                                      f"(RL: x={x_R:.2f}, z={z_R:.2f}, th={th_R:.2f}, "
+                                      f"LL: x={x_L:.2f}, z={z_L:.2f}, th={th_L:.2f})")
+                    
+                    rate.sleep()
+                
+                rospy.loginfo(f"반복 {repeat}/{total_repeats} 완료")
+            
+            rospy.loginfo("테스트 완료: 모든 좌표 데이터 5회 반복 전송 완료")
+            
+        except Exception as e:
+            rospy.logerr(f"데이터 처리 중 오류 발생: {str(e)}")
+
+
     def move_origen(self):
         self.test_origen(-300,-375,-200,-375)
         rospy.sleep(3)
@@ -475,6 +559,8 @@ if __name__ == '__main__':
                 node.test_move_2()
             elif sys.argv[1] == "move_3":
                 node.test_move_3()
+            elif sys.argv[1] == "move_4":
+                node.test_move_4()
             elif sys.argv[1] == "origen":
                 node.move_origen()
                 # test_origen 함수 실행 (이미 초기화 시 호출됨)
