@@ -205,12 +205,15 @@ class ObserbotMoveNode:
 
         rospy.sleep(3)
 
-    def test_move(self):
+    def test_move(self, total_repeats=1):
         """
         데이터 파일에서 값을 읽어 순차적으로 송신하는 테스트 함수
-        set_sample.csv 파일의 좌표 값을 읽어서 5회 반복 전송
+        set_sample.csv 파일의 좌표 값을 읽어서 지정된 횟수만큼 반복 전송
+        
+        Args:
+            total_repeats (int): 데이터 반복 전송 횟수 (기본값: 1)
         """
-        rospy.loginfo("테스트 시작: CSV 파일에서 좌표 읽어오기 (5회 반복)")
+        rospy.loginfo(f"테스트 시작: CSV 파일에서 좌표 읽어오기 ({total_repeats}회 반복)")
         
         # CSV 파일 경로 설정
         script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -245,9 +248,8 @@ class ObserbotMoveNode:
                 return
             
             rate = rospy.Rate(50)  # 50Hz로 실행
-            total_repeats = 5  # 5회 반복
             
-            # 5회 반복 전송
+            # 지정된 횟수만큼 반복 전송
             for repeat in range(1, total_repeats + 1):
                 rospy.loginfo(f"반복 {repeat}/{total_repeats} 시작")
                 
@@ -280,18 +282,21 @@ class ObserbotMoveNode:
                 
                 rospy.loginfo(f"반복 {repeat}/{total_repeats} 완료")
             
-            rospy.loginfo("테스트 완료: 모든 좌표 데이터 5회 반복 전송 완료")
+            rospy.loginfo(f"테스트 완료: 모든 좌표 데이터 {total_repeats}회 반복 전송 완료")
             
         except Exception as e:
             rospy.logerr(f"데이터 처리 중 오류 발생: {str(e)}")
 
-    def test_move_2(self):
+    def test_move_2(self, total_repeats=1):
         """
         데이터 파일에서 값을 읽어 순차적으로 송신하는 테스트 함수
-        set_sample_2.csv 파일의 좌표 값을 읽어서 5회 반복 전송
+        set_sample_2.csv 파일의 좌표 값을 읽어서 지정된 횟수만큼 반복 전송
         CSV 형식: x_R, z_R, th_R, x_L, z_L, th_L 순서
+        
+        Args:
+            total_repeats (int): 데이터 반복 전송 횟수 (기본값: 1)
         """
-        rospy.loginfo("테스트 시작: CSV 파일에서 다리 좌표 데이터 읽어오기 (5회 반복)")
+        rospy.loginfo(f"테스트 시작: CSV 파일에서 다리 좌표 데이터 읽어오기 ({total_repeats}회 반복)")
         
         # CSV 파일 경로 설정
         script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -328,9 +333,8 @@ class ObserbotMoveNode:
                 return
             
             rate = rospy.Rate(50)  # 50Hz로 실행
-            total_repeats = 1  # 5회 반복
             
-            # 5회 반복 전송
+            # 지정된 횟수만큼 반복 전송
             for repeat in range(1, total_repeats + 1):
                 rospy.loginfo(f"반복 {repeat}/{total_repeats} 시작")
                 
@@ -362,18 +366,21 @@ class ObserbotMoveNode:
                 
                 rospy.loginfo(f"반복 {repeat}/{total_repeats} 완료")
             
-            rospy.loginfo("테스트 완료: 모든 좌표 데이터 5회 반복 전송 완료")
+            rospy.loginfo(f"테스트 완료: 모든 좌표 데이터 {total_repeats}회 반복 전송 완료")
             
         except Exception as e:
             rospy.logerr(f"데이터 처리 중 오류 발생: {str(e)}")
 
-    def test_move_3(self):
+    def test_move_3(self, total_repeats=1):
         """
         데이터 파일에서 값을 읽어 순차적으로 송신하는 테스트 함수
-        set_sample_2.csv 파일의 좌표 값을 읽어서 5회 반복 전송
+        set_sample_3.csv 파일의 좌표 값을 읽어서 지정된 횟수만큼 반복 전송
         CSV 형식: x_R, z_R, th_R, x_L, z_L, th_L 순서
+        
+        Args:
+            total_repeats (int): 데이터 반복 전송 횟수 (기본값: 1)
         """
-        rospy.loginfo("테스트 시작: CSV 파일에서 다리 좌표 데이터 읽어오기 (5회 반복)")
+        rospy.loginfo(f"테스트 시작: CSV 파일에서 다리 좌표 데이터 읽어오기 ({total_repeats}회 반복)")
         
         # CSV 파일 경로 설정
         script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -411,9 +418,8 @@ class ObserbotMoveNode:
                 return
             
             rate = rospy.Rate(100)  # 50Hz로 실행
-            total_repeats = 3  # 5회 반복
             
-            # 5회 반복 전송
+            # 지정된 횟수만큼 반복 전송
             for repeat in range(1, total_repeats + 1):
                 rospy.loginfo(f"반복 {repeat}/{total_repeats} 시작")
                 
@@ -445,19 +451,21 @@ class ObserbotMoveNode:
                 
                 rospy.loginfo(f"반복 {repeat}/{total_repeats} 완료")
             
-            rospy.loginfo("테스트 완료: 모든 좌표 데이터 5회 반복 전송 완료")
+            rospy.loginfo(f"테스트 완료: 모든 좌표 데이터 {total_repeats}회 반복 전송 완료")
             
         except Exception as e:
             rospy.logerr(f"데이터 처리 중 오류 발생: {str(e)}")
 
-
-    def test_move_4(self):
+    def test_move_4(self, total_repeats=1):
         """
         데이터 파일에서 값을 읽어 순차적으로 송신하는 테스트 함수
-        set_sample_2.csv 파일의 좌표 값을 읽어서 5회 반복 전송
+        set_sample_4.csv 파일의 좌표 값을 읽어서 지정된 횟수만큼 반복 전송
         CSV 형식: x_R, z_R, th_R, x_L, z_L, th_L 순서
+        
+        Args:
+            total_repeats (int): 데이터 반복 전송 횟수 (기본값: 1)
         """
-        rospy.loginfo("테스트 시작: CSV 파일에서 다리 좌표 데이터 읽어오기 (5회 반복)")
+        rospy.loginfo(f"테스트 시작: CSV 파일에서 다리 좌표 데이터 읽어오기 ({total_repeats}회 반복)")
         
         # CSV 파일 경로 설정
         script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -495,9 +503,8 @@ class ObserbotMoveNode:
                 return
             
             rate = rospy.Rate(100)  # 50Hz로 실행
-            total_repeats = 1  # 5회 반복
             
-            # 5회 반복 전송
+            # 지정된 횟수만큼 반복 전송
             for repeat in range(1, total_repeats + 1):
                 rospy.loginfo(f"반복 {repeat}/{total_repeats} 시작")
                 
@@ -529,11 +536,10 @@ class ObserbotMoveNode:
                 
                 rospy.loginfo(f"반복 {repeat}/{total_repeats} 완료")
             
-            rospy.loginfo("테스트 완료: 모든 좌표 데이터 5회 반복 전송 완료")
+            rospy.loginfo(f"테스트 완료: 모든 좌표 데이터 {total_repeats}회 반복 전송 완료")
             
         except Exception as e:
             rospy.logerr(f"데이터 처리 중 오류 발생: {str(e)}")
-
 
     def move_origen(self):
         self.test_origen(-300,-375,-200,-375)
@@ -552,15 +558,23 @@ if __name__ == '__main__':
         
         # 명령줄 인수로 테스트 여부 확인
         if len(sys.argv) > 1:
+            # 두 번째 인수가 있으면 total_repeats 값으로 사용
+            total_repeats = 1  # 기본값 설정
+            if len(sys.argv) > 2:
+                try:
+                    total_repeats = int(sys.argv[2])
+                except ValueError:
+                    rospy.logwarn(f"Invalid total_repeats value: {sys.argv[2]}. Using default: 1")
+            
             if sys.argv[1] == "move":
                 # test_move 함수 실행
-                node.test_move()    
+                node.test_move(total_repeats)    
             elif sys.argv[1] == "move_2":
-                node.test_move_2()
+                node.test_move_2(total_repeats)
             elif sys.argv[1] == "move_3":
-                node.test_move_3()
+                node.test_move_3(total_repeats)
             elif sys.argv[1] == "move_4":
-                node.test_move_4()
+                node.test_move_4(total_repeats)
             elif sys.argv[1] == "origen":
                 node.move_origen()
                 # test_origen 함수 실행 (이미 초기화 시 호출됨)
