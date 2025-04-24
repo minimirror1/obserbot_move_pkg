@@ -449,7 +449,12 @@ class ObserbotMoveNode:
             
         except Exception as e:
             rospy.logerr(f"데이터 처리 중 오류 발생: {str(e)}")
-        
+
+
+    def move_origen(self):
+        self.test_origen(-300,-375,-200,-375)
+        rospy.sleep(3)
+
     def run(self):
         rate = rospy.Rate(50)  # 10Hz
         while not rospy.is_shutdown():
@@ -471,6 +476,7 @@ if __name__ == '__main__':
             elif sys.argv[1] == "move_3":
                 node.test_move_3()
             elif sys.argv[1] == "origen":
+                node.move_origen()
                 # test_origen 함수 실행 (이미 초기화 시 호출됨)
                 pass
         else:
